@@ -63,7 +63,9 @@ public class FreakyAndroidStudioV4 extends OpMode {
     }
     private void FlyWheelProgramming() throws InterruptedException {
         telemetry.addData("RPM", Flywheel.getVelocity());
+        telemetry.addData("Target Power", 1275);
         if (gamepad1.xWasPressed()) {
+            new PIDF_Flywheel();
             if (!FlyWheelReady) {
                 Flywheel.setVelocity(1275);
                 FlyWheelReady = true;
