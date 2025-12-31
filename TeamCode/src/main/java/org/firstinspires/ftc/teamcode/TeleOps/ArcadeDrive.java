@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOps;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class ArcadeDrive {
@@ -13,7 +14,7 @@ public class ArcadeDrive {
 
 
 
-    private double SPIN_DAMPING = 1.2;
+    private final double SPIN_DAMPING = 1.2;
 
     public void init(HardwareMap hm) {
 
@@ -23,10 +24,10 @@ public class ArcadeDrive {
         BL = hm.get(DcMotor.class, "back left");
         BR = hm.get(DcMotor.class, "back right");
 
-        FL.setDirection(DcMotor.Direction.FORWARD);
-        BL.setDirection(DcMotor.Direction.FORWARD);
-        FR.setDirection(DcMotor.Direction.REVERSE);
-        BR.setDirection(DcMotor.Direction.REVERSE);
+        FL.setDirection(DcMotor.Direction.REVERSE);
+        BL.setDirection(DcMotor.Direction.REVERSE);
+        FR.setDirection(DcMotor.Direction.FORWARD);
+        BR.setDirection(DcMotor.Direction.FORWARD);
 
         FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -43,15 +44,14 @@ public class ArcadeDrive {
         double leftBackPower = (y - x + rotate) / denominator;
         double rightBackPower = (y + x - rotate) / denominator;
 
-        FL.setPower(-leftFrontPower / SPIN_DAMPING);
-        FR.setPower(-rightFrontPower / SPIN_DAMPING);
-        BL.setPower(-leftBackPower / SPIN_DAMPING);
-        BR.setPower(-rightBackPower / SPIN_DAMPING);
+        FL.setPower(leftFrontPower / SPIN_DAMPING);
+        FR.setPower(rightFrontPower / SPIN_DAMPING);
+        BL.setPower(leftBackPower / SPIN_DAMPING);
+        BR.setPower(rightBackPower / SPIN_DAMPING);
     }
 
     public void straightEncoder(int ticks, double power) {
 
-        power = -power;
 
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -85,7 +85,6 @@ public class ArcadeDrive {
 
     public void strafeEncoder(int ticks, double power) {
 
-        power = -power;
 
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -119,7 +118,6 @@ public class ArcadeDrive {
 
     public void rotateEncoder(int ticks, double power) {
 
-        power = -power;
 
         BL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

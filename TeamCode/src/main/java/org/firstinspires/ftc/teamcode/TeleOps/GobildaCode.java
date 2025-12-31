@@ -70,8 +70,7 @@ public class GobildaCode extends OpMode {
 
     @Override
     public void loop() {
-        double y = gamepad1.left_stick_y;
-        y = -y;
+        double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double rotate = -gamepad1.right_stick_x;
 
