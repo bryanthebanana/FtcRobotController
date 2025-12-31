@@ -117,7 +117,7 @@ public class ArcadeDrive {
         BR.setPower(0);
     }
 
-    private void rotateEncoder(int ticks, double power) {
+    public void rotateEncoder(int ticks, double power) {
 
         power = -power;
 
