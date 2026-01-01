@@ -23,7 +23,7 @@ public class Launcher {
     final double END_TIME = 1;
     final double STOP_SPEED = 0.0; //We send this power to the servos when we want them to stop.
     final double FULL_SPEED = 0.7;
-    final double LAUNCHER_TARGET_VELOCITY = 1450 - 300 ;
+    final double LAUNCHER_TARGET_VELOCITY = 1300 ;
     final double LAUNCHER_MIN_VELOCITY = LAUNCHER_TARGET_VELOCITY-50;
     final double F = 10.9;
     final double P = 132.00;
@@ -69,6 +69,7 @@ public class Launcher {
     IDLE -> SPIN_UP-> LAUNCH -> LAUNCHING -> LAUNCH or IDLE
      */
     public boolean updateState(boolean shotRequested, boolean macroRequested){
+        rpmChecker();
         switch (launchState) {
             case "IDLE":
                 if (shotRequested){
@@ -122,7 +123,7 @@ public class Launcher {
         if (launcher.getVelocity() >= LAUNCHER_MIN_VELOCITY) {
             led.setPosition(0.5);
         } else {
-            led.setPosition(0.3);
+            led.setPosition(0.28);
         }
     }
 

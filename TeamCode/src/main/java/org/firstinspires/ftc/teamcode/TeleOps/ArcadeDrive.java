@@ -24,10 +24,10 @@ public class ArcadeDrive {
         BL = hm.get(DcMotor.class, "back left");
         BR = hm.get(DcMotor.class, "back right");
 
-        FL.setDirection(DcMotor.Direction.REVERSE);
-        BL.setDirection(DcMotor.Direction.REVERSE);
-        FR.setDirection(DcMotor.Direction.FORWARD);
-        BR.setDirection(DcMotor.Direction.FORWARD);
+        FL.setDirection(DcMotor.Direction.FORWARD);
+        BL.setDirection(DcMotor.Direction.FORWARD);
+        FR.setDirection(DcMotor.Direction.REVERSE);
+        BR.setDirection(DcMotor.Direction.REVERSE);
 
         FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

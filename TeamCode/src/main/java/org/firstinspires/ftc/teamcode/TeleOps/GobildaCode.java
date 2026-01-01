@@ -72,7 +72,7 @@ public class GobildaCode extends OpMode {
     public void loop() {
         double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
-        double rotate = -gamepad1.right_stick_x;
+        double rotate = gamepad1.right_stick_x;
         a1.drive(y, x, rotate);
         boolean done = l1.updateState(gamepad1.rightBumperWasPressed(), true);
         if (gamepad1.y) {
@@ -80,7 +80,7 @@ public class GobildaCode extends OpMode {
         } else if (gamepad1.b) { // stop flywheel
             l1.stopLauncher();
         }
-        l1.rpmChecker();
+
     }
 
     @Override
