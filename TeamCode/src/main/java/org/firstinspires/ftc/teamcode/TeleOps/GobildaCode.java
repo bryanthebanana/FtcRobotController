@@ -80,6 +80,8 @@ public class GobildaCode extends OpMode {
         } else if (gamepad1.b) { // stop flywheel
             l1.stopLauncher();
         }
+        telemetry.addData("Heading", a1.getHeading());
+        telemetry.update();
 
     }
 

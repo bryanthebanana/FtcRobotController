@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOps;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class ArcadeDrive {
 
@@ -11,6 +16,7 @@ public class ArcadeDrive {
     private DcMotor FR;
     private DcMotor BL;
     private DcMotor BR;
+    private IMU imu;
 
 
 
@@ -23,6 +29,12 @@ public class ArcadeDrive {
         FR = hm.get(DcMotor.class, "front right");
         BL = hm.get(DcMotor.class, "back left");
         BR = hm.get(DcMotor.class, "back right");
+        imu = hm.get(IMU.class, "imu");
+
+        RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+        );
 
         FL.setDirection(DcMotor.Direction.FORWARD);
         BL.setDirection(DcMotor.Direction.FORWARD);
@@ -33,6 +45,8 @@ public class ArcadeDrive {
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        imu.initialize(new IMU.Parameters(RevOrientation));
     }
 
     public void drive(double y, double x, double rotate) {
@@ -148,6 +162,35 @@ public class ArcadeDrive {
         BL.setPower(0);
         BR.setPower(0);
     }
+
+    public void imuTurn(double angle, double power){
+
+        double kp = 0.01;
+        double error;
+
+        error = angle - getHeading();
+
+        if (Math.abs(error) < 1.0){
+            return;
+        }
+
+        double turnPower = kp * error;
+
+        turnPower = Math.max(-power, Math.min(power, turnPower));
+
+        FL.setPower(turnPower);
+        BL.setPower(turnPower);
+        FR.setPower(-turnPower);
+        BR.setPower(-turnPower);
+
+    }
+
+
+
+    public double getHeading(){
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
     /* public int FLReturnEncoders(){
         return FL.getCurrentPosition();
     }

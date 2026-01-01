@@ -26,11 +26,16 @@ public class RedFarsideAuto extends LinearOpMode{
         waitForStart();
 
         a1.straightEncoder(2530, 0.3);
-        a1.rotateEncoder( 425,0.3);
+        //a1.rotateEncoder( 425,0.3);
+        double angle = 45;
+        while(opModeIsActive() && Math.abs(angle - a1.getHeading()) > 1.0){
+            a1.imuTurn(angle, 0.3);
+            idle();
+        }
         a1.straightEncoder(1800,0.4);
         launchTimer.reset();
         while (!l1.updateState(true, true)) {
-
+            idle();
         }
         a1.straightEncoder(-510, 0.3);
         a1.strafeEncoder(-800, 0.3);
