@@ -148,4 +148,17 @@ public class ArcadeDrive {
         BL.setPower(0);
         BR.setPower(0);
     }
+    /* public int FLReturnEncoders(){
+        return FL.getCurrentPosition();
+    }
+    public double FRReturnEncoders(){
+        return FR.getCurrentPosition();
+    }
+    public double BLReturnEncoders(){
+        return BL.getCurrentPosition();
+    }
+    public double BRReturnEncoders(){
+
+        return BR.getCurrentPosition();
+    }*/
 }
