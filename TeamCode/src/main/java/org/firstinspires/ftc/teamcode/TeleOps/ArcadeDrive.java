@@ -24,6 +24,10 @@ public class ArcadeDrive {
 
     double startHeading;
 
+    double straightLineTolerance = 5;
+
+
+
 
 
     private final double SPIN_DAMPING = 1.2;
@@ -103,6 +107,10 @@ public class ArcadeDrive {
         FR.setPower(0);
         BL.setPower(0);
         BR.setPower(0);
+
+
+
+
     }
 
     public void strafeEncoder(int ticks, double power) {
@@ -226,7 +234,7 @@ public class ArcadeDrive {
         BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         double kp = 0.016;
         double minPower = 0.2;
-        double tolerance = 3;
+        double tolerance = straightLineTolerance;
 
         double currentDistance = getDistance();
 

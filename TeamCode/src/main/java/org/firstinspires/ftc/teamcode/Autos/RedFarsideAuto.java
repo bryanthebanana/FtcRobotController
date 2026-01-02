@@ -17,6 +17,8 @@ public class RedFarsideAuto extends LinearOpMode{
 
     int LAUNCH_WAIT = 5;
 
+    int farSideDistanceToWall = 85;
+
     @Override
     public void runOpMode() {
 
@@ -25,22 +27,36 @@ public class RedFarsideAuto extends LinearOpMode{
 
         waitForStart();
 
+        // 1. Move straight using encoders
         a1.straightEncoder(2530, 0.3);
-        a1.rotateEncoder( 425,0.3);
+        // 2. Ensure the robot is at the correct distance using the distance sensor measuring off the side wall
+        if (Math.abs(a1.getDistance() - farSideDistanceToWall) > 5){
+            while(opModeIsActive() && !a1.straightLineSensor(farSideDistanceToWall, 0.3)){
+                idle();
+            }
+        }
+        // 3. Ensure the robot is pointing straight after moving straight for a while
+        while(opModeIsActive() && !a1.imuTurn(0, 0.3)){
+            idle();
+        }
+        // 4. Turn to face the goal
         double angle = 315;
         while(opModeIsActive() && !a1.imuTurn(angle, 0.3)){
             idle();
-            telemetry.addData("FL power", a1.getFLPower());
-            telemetry.addData("Current Heading,", a1.getHeading());
-            telemetry.addData("Target angle", angle);
-            telemetry.update();
         }
-        a1.straightEncoder(1800,0.4);
+        // 5. Move straight until touching the goal
+        //a1.straightEncoder(1800,0.4);
+        while(opModeIsActive() && !a1.straightLineSensor(0,0.3)){
+            idle();
+        }
+        // 6. Launch all three balls
         launchTimer.reset();
         while (!l1.updateState(true, true)) {
             idle();
         }
+        // 7. Move backwards away from the goal
         a1.straightEncoder(-510, 0.3);
+        // 8. Strafe left into the zone
         a1.strafeEncoder(-800, 0.3);
 
     }

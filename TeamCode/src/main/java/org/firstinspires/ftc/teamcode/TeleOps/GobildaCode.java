@@ -70,7 +70,7 @@ public class GobildaCode extends OpMode {
 
     @Override
     public void loop() {
-        /*
+
         double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x;
         double rotate = gamepad1.right_stick_x;
@@ -83,10 +83,7 @@ public class GobildaCode extends OpMode {
         }
         telemetry.addData("Heading", a1.getHeading());
         telemetry.update();
-        */
-        a1.straightLineSensor(85, 0.3);
-        telemetry.addData("Distance", a1.getDistance());
-        telemetry.update();
+
     }
 
     @Override
