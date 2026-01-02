@@ -5,10 +5,12 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class ArcadeDrive {
 
@@ -17,6 +19,10 @@ public class ArcadeDrive {
     private DcMotor BL;
     private DcMotor BR;
     private IMU imu;
+
+    private DistanceSensor distanceSensor;
+
+    double startHeading;
 
 
 
@@ -30,6 +36,7 @@ public class ArcadeDrive {
         BL = hm.get(DcMotor.class, "back left");
         BR = hm.get(DcMotor.class, "back right");
         imu = hm.get(IMU.class, "imu");
+        distanceSensor = hm.get(DistanceSensor.class, "distance");
 
         RevHubOrientationOnRobot RevOrientation = new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
@@ -47,6 +54,7 @@ public class ArcadeDrive {
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         imu.initialize(new IMU.Parameters(RevOrientation));
+        startHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     public void drive(double y, double x, double rotate) {
@@ -163,32 +171,116 @@ public class ArcadeDrive {
         BR.setPower(0);
     }
 
-    public void imuTurn(double angle, double power){
+    public boolean imuTurn(double angle, double power){
+        FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double kp = 0.01;
+
+
+
+        double kp = 0.01 - 0.006;
         double error;
+        double minPower = 0.2;
+
+
 
         error = angle - getHeading();
 
-        if (Math.abs(error) < 1.0){
-            return;
+        if (error > 180) error -= 360;
+        if (error < -180) error += 360;
+
+        if (Math.abs(error) < 2.5){
+            FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            stopMotors();
+            return true;
         }
 
         double turnPower = kp * error;
 
-        turnPower = Math.max(-power, Math.min(power, turnPower));
+        if (turnPower > power) turnPower = power;
+        if (turnPower < -power) turnPower = -power;
 
-        FL.setPower(turnPower);
-        BL.setPower(turnPower);
-        FR.setPower(-turnPower);
-        BR.setPower(-turnPower);
 
+        if (Math.abs(turnPower) < minPower) {
+            turnPower = Math.signum(turnPower) * minPower;
+        }
+
+
+        FL.setPower(-turnPower);
+        BL.setPower(-turnPower);
+        FR.setPower(turnPower);
+        BR.setPower(turnPower);
+        return false;
+
+    }
+
+    public boolean straightLineSensor(double targetDistance, double maxPower){
+        FL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        double kp = 0.016;
+        double minPower = 0.2;
+        double tolerance = 3;
+
+        double currentDistance = getDistance();
+
+        double error = targetDistance - currentDistance;
+
+        double power = -kp * error;
+        if (Math.abs(error) < tolerance){
+            FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            stopMotors();
+            return true;
+        }
+
+        if (power > maxPower) power = maxPower;
+        if (power < -maxPower) power = -maxPower;
+
+        if (Math.abs(power) < minPower && Math.abs(error) > tolerance){
+            power = Math.signum(power) * minPower;
+        }
+
+        FL.setPower(power);
+        BL.setPower(power);
+        FR.setPower(power);
+        BR.setPower(power);
+
+        //EXPERIMENTAL:Angle correction
+        //imuTurn(getHeading(), 0.3);
+
+        return false;
+
+    }
+
+    public double getFLPower(){
+        return FL.getPower();
+    }
+
+    public double getDistance(){
+        return distanceSensor.getDistance(DistanceUnit.CM);
     }
 
 
 
     public double getHeading(){
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double relativeHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - startHeading;
+        return (relativeHeading + 360) % 360;
+    }
+
+    public void stopMotors(){
+        FL.setPower(0);
+        FR.setPower(0);
+        BL.setPower(0);
+        BR.setPower(0);
     }
 
     /* public int FLReturnEncoders(){

@@ -26,11 +26,14 @@ public class RedFarsideAuto extends LinearOpMode{
         waitForStart();
 
         a1.straightEncoder(2530, 0.3);
-        //a1.rotateEncoder( 425,0.3);
-        double angle = 45;
-        while(opModeIsActive() && Math.abs(angle - a1.getHeading()) > 1.0){
-            a1.imuTurn(angle, 0.3);
+        a1.rotateEncoder( 425,0.3);
+        double angle = 315;
+        while(opModeIsActive() && !a1.imuTurn(angle, 0.3)){
             idle();
+            telemetry.addData("FL power", a1.getFLPower());
+            telemetry.addData("Current Heading,", a1.getHeading());
+            telemetry.addData("Target angle", angle);
+            telemetry.update();
         }
         a1.straightEncoder(1800,0.4);
         launchTimer.reset();
