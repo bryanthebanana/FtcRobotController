@@ -15,8 +15,8 @@ public class RedFarsideAuto extends LinearOpMode{
 
     ElapsedTime launchTimer = new ElapsedTime();
     int brakePointMiliseconds = 5000;
-    boolean actuallyDoAuto = false; // change value if cracked out team
-    boolean leftStrafe = false; // strafe left at end if true, strafe right at end if false
+    boolean actuallyDoAuto = true; // change value if cracked out team
+    boolean leftStrafe = false; // h,strafe left at end if true, strafe right at end if false
     int LAUNCH_WAIT = 5;
 
     int farSideDistanceToWall = 78;
@@ -29,10 +29,10 @@ public class RedFarsideAuto extends LinearOpMode{
 
         waitForStart();
         if(actuallyDoAuto){
-            Thread.sleep(brakePointMiliseconds);
+          //  Thread.sleep(brakePointMiliseconds);
 
             // 1. Move straight using encoders
-            a1.straightEncoder(2680, 0.6);
+            a1.straightEncoder(2825, 0.6);
             // 2. Ensure the robot is at the correct distance using the distance sensor measuring off the side wall
             if (Math.abs(a1.getDistance() - farSideDistanceToWall) >= 8){
                 while(opModeIsActive() && !a1.straightLineSensor(farSideDistanceToWall, 0.3)){
