@@ -14,16 +14,19 @@ public class BlueFarsideAuto extends LinearOpMode{
     Launcher l1 = new Launcher();
 
     ElapsedTime launchTimer = new ElapsedTime();
+    int brakePoint = 5000;
 
     int LAUNCH_WAIT = 5;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         a1.init(hardwareMap);
         l1.init(hardwareMap);
 
         waitForStart();
+
+        Thread.sleep(brakePoint);
 
         a1.straightEncoder(2530, 0.3);
         a1.rotateEncoder( -425,0.3);
