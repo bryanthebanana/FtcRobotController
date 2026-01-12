@@ -16,7 +16,7 @@ public class RedFarsideAuto extends LinearOpMode{
     ElapsedTime launchTimer = new ElapsedTime();
     int brakePointMiliseconds = 5000;
     boolean actuallyDoAuto = true; // change value if cracked out team
-    boolean leftStrafe = false; // h,strafe left at end if true, strafe right at end if false
+    boolean leftStrafe = true;//trafe left at end if true, strafe right at end if false
     int LAUNCH_WAIT = 5;
 
     int farSideDistanceToWall = 78;
