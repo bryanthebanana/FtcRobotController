@@ -49,10 +49,7 @@ public class RedFarsideAuto extends LinearOpMode{
                 idle();
             }
             // 5. Move straight until touching the goal
-            //a1.straightEncoder(1800,0.4);
-            while(opModeIsActive() && !a1.straightLineSensor(0,0.3)){
-                idle();
-            }
+            a1.straightEncoder(1500,0.4);
             // 6. Launch all three balls
             launchTimer.reset();
             while (!l1.updateState(true, true)) {
