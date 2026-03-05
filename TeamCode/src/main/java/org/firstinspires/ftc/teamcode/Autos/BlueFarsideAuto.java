@@ -15,7 +15,7 @@ public class BlueFarsideAuto extends LinearOpMode{
 
     ElapsedTime launchTimer = new ElapsedTime();
     int brakePointMiliseconds = 5000;
-    boolean actuallyDoAuto = true; // change value if cracked out team
+    boolean actuallyDoAuto = false; // change value if cracked out team
     boolean leftStrafe = true;//trafe left at end if true, strafe right at end if false
     int LAUNCH_WAIT = 5;
 
@@ -36,6 +36,7 @@ public class BlueFarsideAuto extends LinearOpMode{
             // 2. Ensure the robot is at the correct distance using the distance sensor measuring off the side wall
             if (Math.abs(a1.getDistance() - farSideDistanceToWall) >= 8){
                 while(opModeIsActive() && !a1.straightLineSensor(farSideDistanceToWall, 0.3)){
+
                     idle();
                 }
             }
